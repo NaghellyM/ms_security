@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/sessions")
 public class SessionController {
 
-    @Autowired//
+    @Autowired
     private SessionRepository theSessionRepository;
 
     @Autowired
