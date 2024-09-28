@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/sessions")
 public class SessionController {
-
+    // sobre escribir metodos del padre
     @Autowired
     private SessionRepository theSessionRepository;
 
