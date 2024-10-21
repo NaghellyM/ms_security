@@ -1,11 +1,10 @@
-package com.ddcf.security.Controllers;
-
-import com.ddcf.security.Models.Role;
-import com.ddcf.security.Models.User;
-import com.ddcf.security.Models.UserRole;
-import com.ddcf.security.Repositories.RoleRepository;
-import com.ddcf.security.Repositories.UserRepository;
-import com.ddcf.security.Repositories.UserRoleRepository;
+package com.GSTCP.ms_security.Controllers;
+import com.GSTCP.ms_security.Models.Role;
+import com.GSTCP.ms_security.Models.User;
+import com.GSTCP.ms_security.Models.UserRole;
+import com.GSTCP.ms_security.Repositories.RoleRepository;
+import com.GSTCP.ms_security.Repositories.UserRepository;
+import com.GSTCP.ms_security.Repositories.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,10 +1,7 @@
-package com.ddcf.security.Services;
-
-
-
-import com.ddcf.security.Models.Role;
-import com.ddcf.security.Models.User;
-import com.ddcf.security.Repositories.SessionRepository;
+package com.GSTCP.ms_security.Services;
+import com.GSTCP.ms_security.Models.Role;
+import com.GSTCP.ms_security.Models.User;
+import com.GSTCP.ms_security.Repositories.SessionRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
