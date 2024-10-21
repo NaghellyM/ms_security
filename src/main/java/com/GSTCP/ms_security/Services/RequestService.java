@@ -1,6 +1,9 @@
 package com.GSTCP.ms_security.Services;
 
+import com.GSTCP.ms_security.Entities.EmailContent;
+import com.GSTCP.ms_security.Entities.TelegramContent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -10,11 +13,21 @@ public class RequestService {
     @Autowired
     private RestTemplate restTemplate;
 
-    public List<UserEntity> getUsers() {
-        String url = "url para hacer la solicitud como en el postman/get-users";
-        ResponseEntity<UserEntity[]> response = restTemplate.getForEntity(url,UserEntity[].class);
-        UserEntity[] users = response.getBody();
-        return Arrays.asList(users);
+    @Value("${apis.ms_notification_uri}")
+    private String notification;
+
+
+    public void sendEmail(EmailContent content) {
+        String endpointName = "sendemail";
+        String url = notification + endpointName;
+        restTemplate.postForObject(url, content, String.class);
+
+    }
+
+    public void sendTelegram(TelegramContent content) {
+        String endpointName = "sendTelegram";
+        String url = notification + endpointName;
+        restTemplate.postForObject(url, content, String.class);
     }
 
 

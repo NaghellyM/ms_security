@@ -1,5 +1,5 @@
 //PARA PODER USAR REQUESTSERVICE INYECTADO
-package com.GSTCP.ms_security.configurations;
+package com.GSTCP.ms_security.Configurations;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
