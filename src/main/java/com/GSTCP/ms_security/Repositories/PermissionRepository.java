@@ -1,4 +1,5 @@
 package com.GSTCP.ms_security.Repositories;
+
 import com.GSTCP.ms_security.Models.Permission;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;

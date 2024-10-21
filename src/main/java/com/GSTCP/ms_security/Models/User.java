@@ -3,10 +3,6 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-//import org.springframework.security.core.GrantedAuthority;
-
-import java.util.Collection;
-import java.util.List;
 
 
 @Data
@@ -17,24 +13,14 @@ public class User {
     private String name;
     private String email;
     private String password;
-    private Collection<? extends GrantedAuthority> authorities;
 
 
     //private List<Role> role;
 
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
-    }
-
-    public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
-        this.authorities = authorities;
-    }
-
-    public User(String name, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+    public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.authorities = authorities;
     }
 
     //constructor por defecto
