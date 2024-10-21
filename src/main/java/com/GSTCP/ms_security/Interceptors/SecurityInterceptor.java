@@ -1,6 +1,6 @@
-package com.ddcf.security.Interceptors;
+package com.GSTCP.ms_security.Interceptors;
 
-import com.ddcf.security.Services.ValidatorsService;
+import com.GSTCP.ms_security.Services.ValidatorsService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;

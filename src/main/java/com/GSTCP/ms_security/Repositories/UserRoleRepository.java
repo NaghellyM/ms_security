@@ -1,6 +1,6 @@
-package com.ddcf.security.Repositories;
+package com.GSTCP.ms_security.Repositories;
 
-import com.ddcf.security.Models.UserRole;
+import com.GSTCP.ms_security.Models.UserRole;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
