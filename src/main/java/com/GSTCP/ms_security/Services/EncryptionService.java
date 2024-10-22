@@ -3,6 +3,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 
 //estamos en paquete de servicios
 @Service
@@ -29,4 +30,16 @@ public class EncryptionService {
         }
         return sb.toString();
     }
+    //Metodo para generar un codigo aleatorio
+    public String generateRandomCode(int length) {
+        SecureRandom random = new SecureRandom();
+        StringBuilder code = new StringBuilder(length);
+        String characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+        for (int i = 0; i < length; i++) {
+            code.append(characters.charAt(random.nextInt(characters.length())));
+        }
+        return code.toString();
+    }
+
 }

@@ -1,6 +1,6 @@
 package com.GSTCP.ms_security.Controllers;
 import com.GSTCP.ms_security.Models.User;
-import com.GSTCP.ms_security.Repositories.SessionRepository;
+//import com.GSTCP.ms_security.Repositories.SessionRepository;
 import com.GSTCP.ms_security.Repositories.UserRepository;
 import com.GSTCP.ms_security.Services.EncryptionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +31,8 @@ public class UsersController {
     @Autowired
     private EncryptionService theEncryptionService;
 
-    @Autowired
-    private SessionRepository theSessionRepository;
+    //@Autowired
+    //private SessionRepository theSessionRepository;
 
     @GetMapping("")
     public List<User> find() {

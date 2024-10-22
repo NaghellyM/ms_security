@@ -4,7 +4,7 @@ import com.GSTCP.ms_security.Models.Session;
 import com.GSTCP.ms_security.Models.User;
 import com.GSTCP.ms_security.Repositories.SessionRepository;
 import com.GSTCP.ms_security.Repositories.UserRepository;
-import com.GSTCP.ms_security.Repositories.UserRoleRepository;
+//import com.GSTCP.ms_security.Repositories.UserRoleRepository;
 import com.GSTCP.ms_security.Services.EncryptionService;
 import com.GSTCP.ms_security.Services.JwtService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -36,8 +36,8 @@ public class SecurityController {
     @Autowired
     private SessionRepository theSessionRepository;
 
-    @Autowired
-    private UserRoleRepository theUserRoleRepository;
+    //@Autowired
+    //private UserRoleRepository theUserRoleRepository;
 
     @PostMapping("/login")
     /* crea un HashMap que contendra un string y un objeto y la funcion la llamamos login
