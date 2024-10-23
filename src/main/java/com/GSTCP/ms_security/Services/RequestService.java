@@ -20,9 +20,7 @@ public class RequestService {
     @Autowired
     private RestTemplate restTemplate;
 
-
     @Value("${api.ms-notifications}")
-
     private String notification;
 
 
