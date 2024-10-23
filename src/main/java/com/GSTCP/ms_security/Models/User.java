@@ -13,6 +13,15 @@ public class User {
     private String name;
     private String email;
     private String password;
+    private String verificationCode;
+
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
+    }
+
+    public String getVerificationCode() {
+        return verificationCode;
+    }
 
 
     //private List<Role> role;
@@ -60,11 +69,4 @@ public class User {
         this.password = password;
     }
 
- /*   public List<Role> getRole() {
-        return role;
-    }
-
-    public void setRole(List<Role> role) {
-        this.role = role;
-    }*/
 }

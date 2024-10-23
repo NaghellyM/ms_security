@@ -1,10 +1,14 @@
 package com.GSTCP.ms_security.Controllers;
+import com.GSTCP.ms_security.Models.NotificationRequest;
 import com.GSTCP.ms_security.Models.User;
 //import com.GSTCP.ms_security.Repositories.SessionRepository;
 import com.GSTCP.ms_security.Repositories.UserRepository;
 import com.GSTCP.ms_security.Services.EncryptionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.GSTCP.ms_security.Services.RequestService;
 
 import java.util.List;
 
@@ -17,6 +21,9 @@ public class UsersController {
 
     @Autowired//fabricas de objetos
     private UserRepository theUserRepository; //referencia a la clase de UserRepository porque no se hace una intancia de una clase interfaz
+    
+    @Autowired
+    private RequestService requestService;
 
     /*hago la
     inyeccion de
@@ -79,6 +86,58 @@ public class UsersController {
         if (theUser != null) {
             this.theUserRepository.delete(theUser);
         }
+    }
+
+    @PostMapping("/new-password")
+    public ResponseEntity sendNewPassword(@RequestBody User theNewUser) {
+        //Obtenemos el usuario por medio del email con el repo
+        User theActualUser = this.theUserRepository.getUserByEmail(theNewUser.getEmail());
+
+        System.out.println(theActualUser.getEmail());
+
+        // Generar un código aleatorio de 10 caracteres
+        String newPassword = this.theEncryptionService.generateRandomCode(10);
+        System.out.println(newPassword);
+        //Le asignamos la contraseña cifrada al usuario
+        theActualUser.setPassword(theEncryptionService.convertSHA256(newPassword));
+        //guardamos el usuario
+        this.theUserRepository.save(theActualUser);
+
+        System.out.println(theActualUser.getPassword());
+        // en esta linea creamos el cuerpo del correo
+        String bodyHtml = "<!DOCTYPE html>" +
+                "<html lang='es'>" +
+                "<head>" +
+                "<meta charset='UTF-8'>" +
+                "<meta name='viewport' content='width=device-width, initial-scale=1.0'>" +
+                "<style>" +
+                "body {font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;}" +
+                ".card {background-color: white; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); max-width: 600px; margin: 0 auto; padding: 20px; text-align: center;}" +
+                ".card h1 {color: #333; font-size: 24px;}" +
+                ".card p {color: #666; font-size: 16px;}" +
+                ".card h2 {color: #007BFF; font-size: 20px; margin-top: 20px;}" +
+                "</style>" +
+                "</head>" +
+                "<body>" +
+                "<div class='card'>" +
+                "<h1>Tu nueva contraseña</h1>" +
+                "<p>Esta es tu nueva contraseña para el sistema:</p>" +
+                "<h2>" + newPassword + "</h2>" +
+                "</div>" +
+                "</body>" +
+                "</html>";
+
+        // Creamos una solicitud de notificación
+        NotificationRequest notificationRequest = new NotificationRequest();
+        notificationRequest.setSubject("Solicitud de nueva contraseña");
+        notificationRequest.setRecipient(theActualUser.getEmail());
+        notificationRequest.setBody_html(bodyHtml);
+
+        // Enviamos el correo usando el servicio
+        String response = this.requestService.sendNotification(notificationRequest);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
     }
 
 
