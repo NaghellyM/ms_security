@@ -16,7 +16,7 @@ public class Oauth2Service {
 
     @Autowired
     private RestTemplate restTemplate;
-
+ 
     @Value("${spring.security.oauth2.client.registration.google.client-id}")
     private String googleClientId;
 
