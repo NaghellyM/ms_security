@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
-
 import java.util.Map;
 import java.util.UUID;
 
@@ -16,7 +15,7 @@ import java.util.UUID;
 @RequestMapping("/oauth2")
 public class Oauth2Controller {
     @SuppressWarnings("unused")
-
+    
     @Autowired
     private RequestService theRequestService;
 

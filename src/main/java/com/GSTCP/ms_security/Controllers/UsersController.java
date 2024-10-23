@@ -15,7 +15,7 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/users1") //Mucho ojo con esto Importante colocarlo porque es la ruta de acceso
+@RequestMapping("/api/users") //Mucho ojo con esto Importante colocarlo porque es la ruta de acceso
 
 public class UsersController {
 
