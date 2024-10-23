@@ -20,7 +20,7 @@ public class AuthController {
     @Autowired
     private RequestService requestService;
 
-    @PostMapping("/login")
+    @PostMapping("/email")
     public ResponseEntity<String> sendEmail(@RequestBody EmailContent emailcontent) {
         // Aquí emailContent.getRecipients() es una lista de objetos Recipient
         for (Recipient recipient : emailcontent.getRecipients()) {
