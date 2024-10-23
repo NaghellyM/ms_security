@@ -1,7 +1,7 @@
 package com.GSTCP.ms_security.Controllers;
 
 
-import com.GSTCP.ms_security.Services.oauth2Service;
+import com.GSTCP.ms_security.Services.Oauth2Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +13,9 @@ import java.util.UUID;
 @CrossOrigin
 @RestController
 @RequestMapping("/auth")
-public class authController {
+public class AuthController {
     @Autowired
-    private oauth2Service oauth2Service;
+    private Oauth2Service oauth2Service;
 
     //Generamos un estado único para cada solicitud de redirección a google y github
     private String state;

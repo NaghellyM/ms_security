@@ -12,7 +12,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.Map;
 
 @Service
-public class oauth2Service {
+public class Oauth2Service {
 
     @Autowired
     private RestTemplate restTemplate;
