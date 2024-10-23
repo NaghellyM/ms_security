@@ -1,3 +1,5 @@
+
+
 package com.GSTCP.ms_security.Services;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -15,6 +17,7 @@ public class JwtTokenProvider {
     @Value("${jwt.expiration}")
     private int jwtExpirationInMs;
 
+    @SuppressWarnings("deprecation")
     public String generateToken(String email, String password) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
@@ -28,3 +31,4 @@ public class JwtTokenProvider {
                 .compact();
     }
 }
+  
