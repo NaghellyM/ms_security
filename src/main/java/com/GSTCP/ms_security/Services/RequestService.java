@@ -13,7 +13,7 @@ public class RequestService {
     @Autowired
     private RestTemplate restTemplate;
 
-    @Value("${apis.ms_notification_uri}")
+    @Value("${api.ms-notifications}")
     private String notification;
 
 

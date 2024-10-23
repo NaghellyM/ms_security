@@ -8,11 +8,12 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Collections;
 import java.util.Map;
 
 @Service
 public class Oauth2Service {
-    //Claves de google
+    // Google Properties
     @Value("${google.client.id}")
     private String googleClientId;
 
@@ -31,38 +32,45 @@ public class Oauth2Service {
     @Value("${google.user.info.uri}")
     private String googleUserInfoUri;
 
+    // GitHub Properties
+    @Value("${spring.security.oauth2.client.registration.github.client-id}")
+    private String gitHubClientId;
+
+    @Value("${spring.security.oauth2.client.registration.github.client-secret}")
+    private String gitHubClientSecret;
+
+    @Value("${spring.security.oauth2.client.registration.github.redirect-uri}")
+    private String gitHubRedirectUri;
+
+    @Value("${github.auth.uri}")
+    private String gitHubOauth2Uri;
+
+    @Value("${github.token.uri}")
+    private String gitHubTokenUri;
+
+    @Value("${github.user.info.uri}")
+    private String gitHubUserInfoUri;
+
     private final RestTemplate restTemplate = new RestTemplate();
 
-    //Aqui generamos la url de autenticación para google con algunos atributos (los ultimos 2 son por
-    //temas de la libreria
-    //Este metodo recibe el estado enviado por el endpoint ("google")
+    // Google Methods
     public String getGoogleUrl(String state) {
-        //El UriComponentsBuilder se usa para crear una url
-        //la url la vamos creando paso por paso con los parametros
-        //que definimos previemente
-        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(googleOauth2Uri)
+        return UriComponentsBuilder.fromHttpUrl(googleOauth2Uri)
                 .queryParam("client_id", googleClientId)
                 .queryParam("redirect_uri", googleRedirectUri)
-                .queryParam("response_type", "code") //La respuesta es un codigo
-                .queryParam("scope", "openid profile email")  // Aquí definimos que queremos recibir del scope (la ventana emergente)
-                                                                            // que configuramos en el apartado del Google Console. En este caso
-                                                                            // pedimos el openid, profile y email
-                .queryParam("state", state) //Aquí le decimos el estado del navegador en el que estoy
+                .queryParam("response_type", "code")
+                .queryParam("scope", "openid profile email")
+                .queryParam("state", state)
                 .queryParam("access_type", "offline")
-                .queryParam("prompt", "consent");
-        //Y retornamos la url como un string
-        return uriBuilder.toUriString();
+                .queryParam("prompt", "consent")
+                .toUriString();
     }
 
-    //Aqui obtenemos el token que le solicitamos a google (lo genera)
-    //Enviamos como parametro el codigo
     public Map<String, Object> getGoogleAccessToken(String code) {
-        //Aquí en los headers definimos que va a ser un tipo de aplication para
-        //la autenticación
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
-        //Definimos un nuevo map con los atributos del google oauth2
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("code", code);
         params.add("client_id", googleClientId);
@@ -71,30 +79,100 @@ public class Oauth2Service {
         params.add("grant_type", "authorization_code");
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
-        //nuevamente usamos restTemplate para hacer una solicitud a la API de google, con una url,
-        // con una informacion (googleTokenUri) y va a devolver una clase mapeada
-        ResponseEntity<Map> response = restTemplate.postForEntity(googleTokenUri, request, Map.class);
-        //dentro de esta respuesta ya tengo mi access token
-        System.out.println(response);
-        return response.getBody();
+
+        try {
+            ResponseEntity<Map> response = restTemplate.postForEntity(googleTokenUri, request, Map.class);
+            System.out.println("Google Token Response: " + response.getBody());
+            return response.getBody();
+        } catch (Exception e) {
+            System.err.println("Error getting Google access token: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
-    // Obtiene información del usuario de Google
-    // Se hace nuevamente una solicitud a Google
     public Map<String, Object> getGoogleUserInfo(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(accessToken); // headers: size = 1
-        //Con un bearertoken
-        //Para que agarre esa indormacion
-        HttpEntity<Void> request = new HttpEntity<>(headers); // request: {Authorization=Bearer ya29.a0Aa...}
-        //Y me la devuelva
-        ResponseEntity<Map> response = restTemplate.exchange(googleUserInfoUri, HttpMethod.GET, request, Map.class);
-        System.out.println(response);
-        return response.getBody(); // response: "200 OK OK, {id=105115495175148508726, email=luran.me0704@gmail.com}"
+        headers.setBearerAuth(accessToken);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+        HttpEntity<Void> request = new HttpEntity<>(headers);
+
+        try {
+            ResponseEntity<Map> response = restTemplate.exchange(
+                    googleUserInfoUri,
+                    HttpMethod.GET,
+                    request,
+                    Map.class
+            );
+            System.out.println("Google User Info Response: " + response.getBody());
+            return response.getBody();
+        } catch (Exception e) {
+            System.err.println("Error getting Google user info: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
+    // GitHub Methods
+    public String getGitHubUrl(String state) {
+        String finalUrl = UriComponentsBuilder.fromHttpUrl(gitHubOauth2Uri)
+                .queryParam("client_id", gitHubClientId)
+                .queryParam("redirect_uri", gitHubRedirectUri)
+                .queryParam("scope", "user:email")
+                .queryParam("state", state)
+                .toUriString();
 
+        System.out.println("Generated GitHub URL: " + finalUrl);
+        return finalUrl;
+    }
 
+    public Map<String, Object> getGitHubAccessToken(String code) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.set("Accept", "application/json");
 
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("code", code);
+        params.add("client_id", gitHubClientId);
+        params.add("client_secret", gitHubClientSecret);
+        params.add("redirect_uri", gitHubRedirectUri);
 
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
+
+        try {
+            ResponseEntity<Map> response = restTemplate.postForEntity(gitHubTokenUri, request, Map.class);
+            System.out.println("GitHub Token Response: " + response.getBody());
+            return response.getBody();
+        } catch (Exception e) {
+            System.err.println("Error getting GitHub access token: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    public Map<String, Object> getGitHubUserInfo(String accessToken) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(accessToken);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.set("User-Agent", "Spring-Boot-Application");
+
+        HttpEntity<Void> request = new HttpEntity<>(headers);
+
+        try {
+            ResponseEntity<Map> response = restTemplate.exchange(
+                    gitHubUserInfoUri,
+                    HttpMethod.GET,
+                    request,
+                    Map.class
+            );
+            System.out.println("GitHub User Info Response: " + response.getBody());
+            return response.getBody();
+        } catch (Exception e) {
+            System.err.println("Error getting GitHub user info: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
+    }
 }

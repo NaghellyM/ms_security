@@ -36,6 +36,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     }
 
+    //Aqui manejamos el tema de la autentificacion con google y github
     
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -44,7 +45,7 @@ public class WebConfig implements WebMvcConfigurer {
                     //tiene la función de permitir el acceso público
                     // (sin autenticación) a las rutas específicas que se mencionan en el array de URLs.
                     //Ya sea solamente /, o /auth/google, etc. Comentarla si se quieren deshabilitar las rutas
-                    request.requestMatchers("/", "/auth/google", "/auth/github", "/auth/callback/**").permitAll();
+                    //request.requestMatchers("/", "/auth/google", "/auth/github", "/auth/callback/**").permitAll();
                     request.anyRequest().permitAll();
                 })
                 .csrf(AbstractHttpConfigurer::disable) // Deshabilita CSRF
