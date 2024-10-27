@@ -7,19 +7,20 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
-@Configuration
-@EnableWebSecurity
+@Configuration // Indica que esta clase es una clase de configuración de Spring
+@EnableWebSecurity // Habilita la seguridad web en la aplicación
 public class SpringConfig {
 
+    // Define un bean que será administrado por el contenedor de Spring
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .authorizeHttpRequests(request ->
-                        request.anyRequest().permitAll()
+                .authorizeHttpRequests(request -> // Configura la autorización de solicitudes HTTP
+                        request.anyRequest().permitAll()  // Permite todas las solicitudes sin restricción
                 )
-                .csrf(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable)
-                .httpBasic(AbstractHttpConfigurer::disable)
-                .build();
+                .csrf(AbstractHttpConfigurer::disable) // Deshabilita la protección CSRF
+                .formLogin(AbstractHttpConfigurer::disable) // Deshabilita el formulario de inicio de sesión
+                .httpBasic(AbstractHttpConfigurer::disable)  // Deshabilita la autenticación HTTP básica
+                .build(); // Construye y devuelve la cadena de filtros de seguridad
     }
 }

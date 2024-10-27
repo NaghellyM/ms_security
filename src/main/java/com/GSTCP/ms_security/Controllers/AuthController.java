@@ -23,9 +23,12 @@ public class AuthController {
     //creamos el endPoint para redireccionar a google
     @GetMapping("/google")
     public RedirectView authenticateWithGoogle(){ //Recibo la sesion del navegador, en este caso de google
-        this.state = UUID.randomUUID().toString(); //Genero un estado único para la solicitud de redirección a google
+        // Genera un estado único para la solicitud de redirección a Google
+        this.state = UUID.randomUUID().toString();
+        // Obtiene la URL de autenticación de Google//Genero un estado único para la solicitud de redirección a google
         String authUrl = oauth2Service.getGoogleAuthUrl(this.state);
-        return new RedirectView(authUrl); //Url a la que quiero red
+        // Redirecciona a la URL de autenticación de Google
+        return new RedirectView(authUrl);
     }
 
     @GetMapping("/github")
@@ -35,31 +38,31 @@ public class AuthController {
         return new RedirectView(authUrl); //Url a la que quiero redireccionar
     }
 
-    //manejamos la redirección cuando se haya logueado
+    // Maneja la redirección cuando el usuario se haya autenticado
     @GetMapping("/callback/{provider}")
     public ResponseEntity<?> callback(@PathVariable String provider, @RequestParam String code, @RequestParam String state) {
+        // Verifica que el estado sea válido
         if (this.state == null || !this.state.equals(state)) {
+            //La línea completa devuelve este ResponseEntity al cliente, indicando que la solicitud fue inválida.
             return ResponseEntity.badRequest().body("Estado inválido");
         }
-
+        // Si el proveedor es Google
         if ("google".equalsIgnoreCase(provider)) {
             //Procedemos a intercambiar el code por un token de acceso.
             Map<String, Object> tokenResponse = oauth2Service.getGoogleAccessToken(code);
             String accessToken = (String) tokenResponse.get("access_token");
-
+            // Obtiene la información del usuario de Google
             Map<String, Object> userInfo = oauth2Service.getGoogleUserInfo(accessToken);
-            // Aquí puedes manejar la lógica de tu aplicación
-
             return ResponseEntity.ok(userInfo);
         } else if ("github".equalsIgnoreCase(provider)) {
             //Procedemos a intercambiar el code por un token de acceso.
             Map<String, Object> tokenResponse = oauth2Service.getGitHubAccessToken(code);
             String accessToken = (String) tokenResponse.get("access_token");
-
+            // Obtiene la información del usuario de GitHub
             Map<String, Object> userInfo = oauth2Service.getGithubUserInfo(accessToken);
-            return ResponseEntity.ok(userInfo);
+            return ResponseEntity.ok(userInfo); //devuelve este ResponseEntity al cliente, indicando que la solicitud fue exitosa y proporcionando la información del usuario.
         } else {
-            return null;
+            return null; //retorna null
         }
 
     }

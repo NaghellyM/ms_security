@@ -34,14 +34,21 @@ public class ProfileController {
         return this.theProfileRepository.save(newUser);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("{id}") // Mapea las solicitudes HTTP PUT a la ruta "/profiles/{id}"
     public Profile update(@PathVariable String id, @RequestBody Profile newProfile) {
+        // Busca el perfil actual en la base de datos por su ID
         Profile actualProfile = this.theProfileRepository.findById(id).orElse(null);
+        // Si el perfil actual existe, actualiza sus datos
         if (actualProfile != null) {
+            // Actualiza el número de teléfono del perfil
             actualProfile.setPhone(newProfile.getPhone());
+            // Actualiza la foto del perfil
             actualProfile.setPhoto(newProfile.getPhoto());
+            // Guarda los cambios en la base de datos
             this.theProfileRepository.save(actualProfile);
+            // Devuelve el perfil actualizado
             return actualProfile;
+            // Si el perfil no existe, devuelve null
         } else {
             return null;
         }
@@ -49,7 +56,9 @@ public class ProfileController {
 
     @DeleteMapping("{id}")
     public void delete(@PathVariable String id) {
+        // Busca el perfil en la base de datos por su ID
         Profile theUser = this.theProfileRepository.findById(id).orElse(null);
+        // Si el perfil existe, elimínalo
         if (theUser != null) {
             this.theProfileRepository.delete(theUser);
         }
@@ -58,9 +67,10 @@ public class ProfileController {
     @PostMapping("{profile_id}/user/{user_id}")
     public Profile matchUserWProfile(@PathVariable String profile_id,
                                      @PathVariable String user_id) {
+        // Busca el perfil y el usuario en la base de datos por sus IDs
         Profile thisProfile = this.theProfileRepository.findById(profile_id).orElse(null);
         User thisUser = this.theUserRepository.findById(user_id).orElse(null);
-
+        // Si ambos existen y el perfil no tiene usuario asignado, asigna el usuario al perfil
         if (thisProfile != null && thisUser != null) {
             if (thisProfile.getUser() == null) {
                 thisProfile.setUser(thisUser);
@@ -77,6 +87,7 @@ public class ProfileController {
 
     @GetMapping("user/{user_id}")
     public List<Profile> getProfileByUser(@PathVariable String user_id) {
+        // Devuelve la lista de perfiles asociados al usuario
         return this.theProfileRepository.getProfileByUser(user_id);
     }
 

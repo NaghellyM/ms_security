@@ -24,59 +24,60 @@ import java.util.List;
 
 
         @GetMapping("")
-        public List<Session> find(){//metodo que retorna una lista de secciones y el find es el nombre del metodo
-            return this.theSessionRepository.findAll();//finfAll es un metodo de la interfaz SeessionRepository
+        public List<Session> find(){
+            return this.theSessionRepository.findAll(); //Este metodo es para que a la hora de que se use un "GET" general de los usuarios, simplemente nos muestre a todos
         }
-        @GetMapping("{id}")
-        public Session findById(@PathVariable String id){
-            Session theSeccion=this.theSessionRepository.findById(id).orElse(null);
-            return theSeccion;
-        }
-        @PostMapping
-        public Session create(@RequestBody Session newSession){
-            return this.theSessionRepository.save(newSession);
-        }
-        @PutMapping("{id}")
-        public Session update(@PathVariable String id, @RequestBody Session newSession){
-            Session actualSession=this.theSessionRepository.findById(id).orElse(null);
-            if(actualSession!=null){
-                actualSession.setToken(newSession.getToken());
-                actualSession.setExpiration(newSession.getExpiration());
 
-                this.theSessionRepository.save(actualSession);
-                return actualSession;
-            }else{
-                return null;
-            }
+        @GetMapping("{id}") // Maps HTTP GET requests to /sessions/{id} to this method
+        public Session findById(@PathVariable String id){ // Defines a method that takes a path variable 'id'
+            Session theSeccion = this.theSessionRepository.findById(id).orElse(null); // Searches for a session by its ID in the repository, returns null if not found
+            return theSeccion; // Returns the found session or null
         }
-        @DeleteMapping("{id}")
-        public void delete(@PathVariable String id){
-            Session theSession=this.theSessionRepository.findById(id).orElse(null);
-            if (theSession!=null){
-                this.theSessionRepository.delete(theSession);
-            }
+
+        @PostMapping // Maps HTTP POST requests to /sessions to this method
+        public Session create(@RequestBody Session newSession){ // Defines a method that takes a request body 'newSession'
+            return this.theSessionRepository.save(newSession); // Saves the new session in the repository and returns it
         }
-        //implementar el match seccion con User
-        @PostMapping("{session_id}/user/{user_id}")
-        public Session matchUser(@PathVariable String session_id,
-                                 @PathVariable String user_id) {
-            Session theSession = this.theSessionRepository.findById(session_id).orElse(null);
-            User theUser = this.theUserRepository.findById(user_id).orElse(null); // creo la variable theUser como objeto y busco el usuario por id
-            if (theSession != null && theUser != null) {
-                theSession.setUser((theUser));
-                this.theSessionRepository.save(theSession);
-                return theSession;
-            } else {
-                return null;
+
+        @PutMapping("{id}") // Maps HTTP PUT requests to /sessions/{id} to this method
+        public Session update(@PathVariable String id, @RequestBody Session newSession){ // Defines a method that takes a path variable 'id' and a request body 'newSession'
+            Session actualSession = this.theSessionRepository.findById(id).orElse(null); // Searches for a session by its ID in the repository, returns null if not found
+            if(actualSession != null){ // Checks if the session exists
+                actualSession.setToken(newSession.getToken()); // Updates the token of the existing session with the new token
+                actualSession.setExpiration(newSession.getExpiration()); // Updates the expiration of the existing session with the new expiration
+                this.theSessionRepository.save(actualSession); // Saves the updated session in the repository
+                return actualSession; // Returns the updated session
+            } else { // If the session does not exist
+                return null; // Returns null
             }
         }
 
-        // vamos hacer el empoint
-        @GetMapping("user/{userId}")
-        public List<Session> getSessionsByUser(@PathVariable String userId) {
-            return this.theSessionRepository.getSessionsByUserId(userId);
+        @DeleteMapping("{id}") // Maps HTTP DELETE requests to /sessions/{id} to this method
+        public void delete(@PathVariable String id){ // Defines a method that takes a path variable 'id'
+            Session theSession = this.theSessionRepository.findById(id).orElse(null); // Searches for a session by its ID in the repository, returns null if not found
+            if (theSession != null){ // Checks if the session exists
+                this.theSessionRepository.delete(theSession); // Deletes the session from the repository
+            }
+        }
 
+        // Implement the match session with User
+        @PostMapping("{session_id}/user/{user_id}") // Maps HTTP POST requests to /sessions/{session_id}/user/{user_id} to this method
+        public Session matchUser(@PathVariable String session_id, @PathVariable String user_id) { // Defines a method that takes two path variables 'session_id' and 'user_id'
+            Session theSession = this.theSessionRepository.findById(session_id).orElse(null); // Searches for a session by its ID in the repository, returns null if not found
+            User theUser = this.theUserRepository.findById(user_id).orElse(null); // Searches for a user by its ID in the repository, returns null if not found
+            if (theSession != null && theUser != null) { // Checks if both the session and the user exist
+                theSession.setUser(theUser); // Sets the user to the session
+                this.theSessionRepository.save(theSession); // Saves the updated session in the repository
+                return theSession; // Returns the updated session
+            } else { // If either the session or the user does not exist
+                return null; // Returns null
+            }
+        }
 
+        // Create the endpoint
+        @GetMapping("user/{userId}") // Maps HTTP GET requests to /sessions/user/{userId} to this method
+        public List<Session> getSessionsByUser(@PathVariable String userId) { // Defines a method that takes a path variable 'userId'
+            return this.theSessionRepository.getSessionsByUserId(userId); // Returns a list of sessions associated with the given userId
         }
 
     }

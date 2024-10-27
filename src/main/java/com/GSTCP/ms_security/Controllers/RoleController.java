@@ -8,18 +8,17 @@ import java.util.List;
 @CrossOrigin
 @RestController
 @RequestMapping("/api/roles")
-public class RoleController {
 
-    @Autowired//fabricas de objetos
-    private RoleRepository theRoleRepository; //referencia a la clase de RoleRepository porque no se hace una intancia de una clase interfaz
+public class RoleController {
+    @Autowired
+    private RoleRepository theRoleRepository; //Aqui se esta usando una inyeccion de dependencias en la interfaz. En este caso esta adoptando los metdodos de la libreria que nos vana a ayudar a conectarnos con la bd de mongo
 
     @GetMapping("")
     public List<Role> find(){
-        return this.theRoleRepository.findAll();
+        return this.theRoleRepository.findAll(); //Este metodo es para que a la hora de que se use un "GET" general de los usuarios, simplemente nos muestre a todos
     }
-
     @GetMapping("{id}")
-    public Role findById(@PathVariable String id){
+    public Role findById(@PathVariable String id){ //Aqui es para devolver un unico usuario. El @PathVariable es la ruta, en este caso de donde va a conseguir el identificador
         Role theRole=this.theRoleRepository.findById(id).orElse(null);
         return theRole;
     }
@@ -32,23 +31,21 @@ public class RoleController {
         Role actualRole=this.theRoleRepository.findById(id).orElse(null);
         if(actualRole!=null){
             actualRole.setName(newRole.getName());
-            actualRole.setDescription(newRole .getDescription());
-
+            actualRole.setDescription(newRole.getDescription());
             this.theRoleRepository.save(actualRole);
             return actualRole;
         }else{
             return null;
         }
     }
-
-
-
     @DeleteMapping("{id}")
     public void delete(@PathVariable String id){
-        Role theRole=this.theRoleRepository.findById(id).orElse(null);
-        if (theRole!=null){
-            this.theRoleRepository.delete(theRole);
+        Role theUser=this.theRoleRepository.findById(id).orElse(null);
+        if (theUser!=null){
+            this.theRoleRepository.delete(theUser);
         }
     }
 
 }
+
+

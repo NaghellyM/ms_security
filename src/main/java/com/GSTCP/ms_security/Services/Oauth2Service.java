@@ -55,35 +55,39 @@ public class Oauth2Service {
 
     // Genera la URL de autenticación para Google
     public String getGoogleAuthUrl(String state) {
+        // Construye la URL de autenticación utilizando UriComponentsBuilder
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(googleAuthUri)
-                .queryParam("client_id", googleClientId)
-                .queryParam("redirect_uri", googleRedirectUri)
-                .queryParam("response_type", "code")
-                .queryParam("scope", "openid profile email")  // Scopes correctos
-                .queryParam("state", state)
-                .queryParam("access_type", "offline")
-                .queryParam("prompt", "consent");
+                // Establece el encabezado de autorización como "Bearer" con el token de acceso
+                .queryParam("client_id", googleClientId) // Agrega el parámetro client_id
+                .queryParam("redirect_uri", googleRedirectUri) // Agrega el parámetro redirect_uri
+                .queryParam("response_type", "code") // Agrega el parámetro response_type con valor "code"
+                .queryParam("scope", "openid profile email")  // Scopes correctos-Agrega el parámetro scope con los valores "openid profile email"
+                .queryParam("state", state) // Agrega el parámetro state
+                .queryParam("access_type", "offline")  // Agrega el parámetro access_type con valor "offline"
+                .queryParam("prompt", "consent"); // Agrega el parámetro prompt con valor "consent"
 
-        return uriBuilder.toUriString();
+        return uriBuilder.toUriString();  // Convierte la URL construida a una cadena y la devuelve
     }
 
     //Método para convertir el codigo en un token
 
     public Map<String, Object> getGoogleAccessToken(String code) {
+        // Crea un objeto HttpHeaders y establece el tipo de contenido como application/x-www-form-urlencoded
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
+        // Crea un objeto MultiValueMap para los parámetros de la solicitud
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("code", code);
-        params.add("client_id", googleClientId);
-        params.add("client_secret", googleClientSecret);
-        params.add("redirect_uri", googleRedirectUri);
-        params.add("grant_type", "authorization_code");
+        params.add("code", code);  // Agrega el parámetro code
+        params.add("client_id", googleClientId); // Agrega el parámetro client_id
+        params.add("client_secret", googleClientSecret);  // Agrega el parámetro client_secret
+        params.add("redirect_uri", googleRedirectUri); // Agrega el parámetro redirect_uri
+        params.add("grant_type", "authorization_code"); // Agrega el parámetro grant_type con valor "authorization_code"
 
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
-        ResponseEntity<Map> response = restTemplate.postForEntity(googleTokenUri, request, Map.class);
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers); // Crea una entidad HTTP con los parámetros y las cabecer
+        ResponseEntity<Map> response = restTemplate.postForEntity(googleTokenUri, request, Map.class); // Crea una entidad HTTP con los parámetros y las cabecer
 
-        return response.getBody();
+        return response.getBody();     // Devuelve el cuerpo de la respuesta
     }
 
     //Obtener informacion del usuario a partir del token
@@ -108,39 +112,41 @@ public class Oauth2Service {
 
     // Genera la URL de autenticación para Github
     public String getGitHubAuthUrl(String state) {
+        // Construye la URL de autenticación utilizando UriComponentsBuilder
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(githubAuthUri)
-                .queryParam("client_id", githubClientId)
-                .queryParam("redirect_uri", githubRedirectUri)
-                .queryParam("response_type", "code")
-                .queryParam("scope", "openid profile email")  // Scopes correctos
-                .queryParam("state", state)
-                .queryParam("access_type", "offline")
-                .queryParam("prompt", "consent");
+                .queryParam("client_id", githubClientId) // Agrega el parámetro client_id
+                .queryParam("redirect_uri", githubRedirectUri) // Agrega el parámetro redirect_uri
+                .queryParam("response_type", "code") // Agrega el parámetro response_type con valor "code"
+                .queryParam("scope", "openid profile email")  // Scopes correctos -// Agrega el parámetro scope con los valores "openid profile email"
+                .queryParam("state", state)  // Agrega el parámetro state
+                .queryParam("access_type", "offline") // Agrega el parámetro access_type con valor "offline"
+                .queryParam("prompt", "consent"); // Agrega el parámetro prompt con valor "consent"
 
         return uriBuilder.toUriString();
+        // Convierte la URL construida a una cadena y la devuelve
     }
-
-    public Map<String, Object> getGitHubAccessToken(String code) { //Recibe un código de autorizacion code es lo que nos manda el servidor de google
+    // Método para convertir el código en un token
+    public Map<String, Object> getGitHubAccessToken(String code) {   // Crea un objeto HttpHeaders y establece el tipo de contenido como application/x-www-form-urlencoded
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
+        // Crea un objeto MultiValueMap para los parámetros de la solicitud
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("code", code);
-        params.add("client_id", githubClientId);
-        params.add("client_secret", githubClientSecret);
-        params.add("redirect_uri", githubRedirectUri);
-        params.add("grant_type", "authorization_code"); //Indica que queremos obtener un token.
+        params.add("code", code); // Agrega el parámetro code
+        params.add("client_id", githubClientId);  // Agrega el parámetro client_id
+        params.add("client_secret", githubClientSecret); // Agrega el parámetro client_secret
+        params.add("redirect_uri", githubRedirectUri); // Agrega el parámetro redirect_uri
+        params.add("grant_type", "authorization_code"); // Agrega el parámetro grant_type con valor "authorization_code"
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);   // Crea una entidad HTTP con los parámetros y las cabeceras
+        ResponseEntity<Map> response = restTemplate.postForEntity(githubTokenUri, request, Map.class);  // Realiza una solicitud POST a githubTokenUri y obtiene la respuesta
 
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
-        ResponseEntity<Map> response = restTemplate.postForEntity(githubTokenUri, request, Map.class);
-
-        return response.getBody();
+        return response.getBody(); // Devuelve el cuerpo de la respuesta
     }
 
-    public Map<String, Object> getGithubUserInfo(String accessToken) {
+    public Map<String, Object> getGithubUserInfo(String accessToken) { // Obtener información del usuario a partir del token
         // Crear un objeto HttpHeaders para enviar el token de acceso en la cabecera
         HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(accessToken);
+        headers.setBearerAuth(accessToken);  // Establece el encabezado de autorización como "Bearer" con el token de acceso
         HttpEntity<Void> request = new HttpEntity<>(headers);
         // Realizar la solicitud GET a la URL de Github para obtener la información del usuario
         ResponseEntity<Map> response = restTemplate.exchange(

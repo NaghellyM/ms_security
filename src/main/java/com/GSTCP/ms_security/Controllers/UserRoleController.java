@@ -30,37 +30,37 @@ public class UserRoleController {
     private RoleRepository theRoleRepository;
 
 
-    @GetMapping("user/{userId}")
-    public List<UserRole> getRolesByUser(@PathVariable String userId){
-        return this.theUserRoleRepository.getRolesByUser(userId);
+    @GetMapping("user/{userId}") // Mapea las solicitudes HTTP GET a /user_role/role/{roleId} a este método
+    public List<UserRole> getRolesByUser(@PathVariable String userId){ // Define un método que toma un parámetro de ruta 'roleId'
+        return this.theUserRoleRepository.getRolesByUser(userId);  // Retorna una lista de objetos UserRole asociados con el roleId dado
     }
 
-    @GetMapping("role/{roleId}")
-    public List<UserRole> getUsersByRole(@PathVariable String roleId){
-        return this.theUserRoleRepository.getUsersByRole(roleId);
+    @GetMapping("role/{roleId}") // Mapea las solicitudes HTTP GET a /user_role/role/{roleId} a este método
+    public List<UserRole> getUsersByRole(@PathVariable String roleId){ // Define un método que toma un parámetro de ruta 'roleId'
+        return this.theUserRoleRepository.getUsersByRole(roleId); // Retorna una lista de objetos UserRole asociados con el roleId dado
     }
     //Hacemos conexiones en el controlador
 
-    @PostMapping("user/{userId}/role/{roleId}")
-    public UserRole create(@PathVariable String userId,
+    @PostMapping("user/{userId}/role/{roleId}") // Mapea las solicitudes HTTP POST a /user_role/user/{userId}/role/{roleId} a este método
+    public UserRole create(@PathVariable String userId, // Define un método que toma dos parámetros de ruta 'userId' y 'roleId'
                             @PathVariable String roleId){
-        User theUser=this.theUserRepository.findById(userId).orElse(null);
-        Role theRole=this.theRoleRepository.findById(roleId).orElse(null);
+        User theUser=this.theUserRepository.findById(userId).orElse(null); // Busca un usuario por su ID en el repositorio, devuelve null si no se encuentra
+        Role theRole=this.theRoleRepository.findById(roleId).orElse(null); // Busca un rol por su ID en el repositorio, devuelve null si no se encuentra
 
-      if(theUser != null && theRole != null){
-          UserRole newUserRole = new UserRole();
-          newUserRole.setUser(theUser);
-          newUserRole.setRole(theRole);
-          return this.theUserRoleRepository.save(newUserRole);
+      if(theUser != null && theRole != null){ // Verifica si tanto el usuario como el rol existen
+          UserRole newUserRole = new UserRole(); // Crea una nueva instancia de UserRole
+          newUserRole.setUser(theUser); // Asigna el usuario al nuevo UserRole
+          newUserRole.setRole(theRole); // Asigna el rol al nuevo UserRole
+          return this.theUserRoleRepository.save(newUserRole); // Guarda el nuevo UserRole en el repositorio y lo retorna
       }else{
-          return null;
+          return null; // Retorna null si el usuario o el rol no existen
       }
     }
-    @DeleteMapping("{id}")
-    public void delete(@PathVariable String id){
-        UserRole theUserRole=this.theUserRoleRepository.findById(id).orElse(null);
-        if (theUserRole!=null) {
-            this.theUserRoleRepository.delete(theUserRole);
+    @DeleteMapping("{id}") // Mapea las solicitudes HTTP DELETE a /user_role/{id} a este método
+    public void delete(@PathVariable String id){ // Define un método que toma un parámetro de ruta 'id'
+        UserRole theUserRole=this.theUserRoleRepository.findById(id).orElse(null); // Busca un UserRole por su ID en el repositorio, devuelve null si no se encuentra
+        if (theUserRole!=null) { // Verifica si el UserRole existe
+            this.theUserRoleRepository.delete(theUserRole); // Elimina el UserRole del repositorio
         }
     }
 
