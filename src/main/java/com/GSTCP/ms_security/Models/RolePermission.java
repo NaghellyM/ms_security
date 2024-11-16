@@ -11,7 +11,6 @@ public class RolePermission {
     private Permission permission;
 
     public RolePermission() {
-
     }
 
     public String get_id() {

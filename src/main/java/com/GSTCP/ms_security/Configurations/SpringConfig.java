@@ -16,11 +16,11 @@ public class SpringConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(request -> // Configura la autorización de solicitudes HTTP
-                        request.anyRequest().permitAll()  // Permite todas las solicitudes sin restricción
+                request.anyRequest().permitAll() // Permite todas las solicitudes sin restricción
                 )
                 .csrf(AbstractHttpConfigurer::disable) // Deshabilita la protección CSRF
                 .formLogin(AbstractHttpConfigurer::disable) // Deshabilita el formulario de inicio de sesión
-                .httpBasic(AbstractHttpConfigurer::disable)  // Deshabilita la autenticación HTTP básica
+                .httpBasic(AbstractHttpConfigurer::disable) // Deshabilita la autenticación HTTP básica
                 .build(); // Construye y devuelve la cadena de filtros de seguridad
     }
 }
