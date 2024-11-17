@@ -1,48 +1,59 @@
 package com.GSTCP.ms_security.Controllers;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.GSTCP.ms_security.Models.Permission;
 import com.GSTCP.ms_security.Models.Role;
 import com.GSTCP.ms_security.Models.RolePermission;
 import com.GSTCP.ms_security.Repositories.PermissionRepository;
 import com.GSTCP.ms_security.Repositories.RolePermissionRepository;
 import com.GSTCP.ms_security.Repositories.RoleRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-import java.util.List;
-
 
 @CrossOrigin
 @RestController
 @RequestMapping("/role-permission") // Mapea las solicitudes a "/role-permission"
 public class RolePermissionController {
-    @Autowired// Inyecta el repositorio de RolePermission
+    @Autowired // Inyecta el repositorio de RolePermission
     private RolePermissionRepository theRolePermissionRepository;
-    @Autowired  // Inyecta el repositorio de Permission
+    @Autowired // Inyecta el repositorio de Permission
     private PermissionRepository thePermissionRepository;
-    @Autowired     // Inyecta el repositorio de Role
+    @Autowired // Inyecta el repositorio de Role
     private RoleRepository theRoleRepository;
 
-    @ResponseStatus(HttpStatus.CREATED)  // Define el estado HTTP 201 (CREATED) para esta operación
-    @PostMapping("role/{roleId}/permission/{permissionId}")   // Mapea las solicitudes POST a "role/{roleId}/permission/{permissionId}"
+    @ResponseStatus(HttpStatus.CREATED) // Define el estado HTTP 201 (CREATED) para esta operación
+    @PostMapping("role/{roleId}/permission/{permissionId}") // Mapea las solicitudes POST a
+                                                            // "role/{roleId}/permission/{permissionId}"
     public RolePermission create(@PathVariable String roleId,
-                                 @PathVariable String permissionId){
-        Role theRole=this.theRoleRepository.findById(roleId)
-                                            .orElse(null);
+            @PathVariable String permissionId) {
+        Role theRole = this.theRoleRepository.findById(roleId)
+                .orElse(null);
         // Busca el permiso por su ID
-        Permission thePermission=this.thePermissionRepository.findById((permissionId))
-                                                                .orElse(null);
+        Permission thePermission = this.thePermissionRepository.findById((permissionId))
+                .orElse(null);
         // Si ambos, el rol y el permiso, existen
-        if(theRole!=null && thePermission!=null){
-            RolePermission newRolePermission=new RolePermission(); // Crea una nueva instancia de RolePermission
+        if (theRole != null && thePermission != null) {
+            RolePermission newRolePermission = new RolePermission(); // Crea una nueva instancia de RolePermission
             newRolePermission.setRole(theRole); // Asigna el rol a la nueva instancia
             newRolePermission.setPermission(thePermission); // Asigna el permiso a la nueva instancia
-            return this.theRolePermissionRepository.save(newRolePermission); // Guarda la nueva instancia en el repositorio y la retorna
-        }else{
-            return null;    // Si el rol o el permiso no existen, retorna null
+            return this.theRolePermissionRepository.save(newRolePermission); // Guarda la nueva instancia en el
+                                                                             // repositorio y la retorna
+        } else {
+            return null; // Si el rol o el permiso no existen, retorna null
         }
     }
-    @ResponseStatus(HttpStatus.NO_CONTENT)     // Define el estado HTTP 204 (NO CONTENT) para esta operación
+
+    @ResponseStatus(HttpStatus.NO_CONTENT) // Define el estado HTTP 204 (NO CONTENT) para esta operación
 
     // Mapea las solicitudes DELETE a "{id}"
     @DeleteMapping("{id}")
@@ -56,9 +67,10 @@ public class RolePermissionController {
             this.theRolePermissionRepository.delete(theRolePermission);
         }
     }
+
     // Mapea las solicitudes GET a "role/{roleId}"
     @GetMapping("role/{roleId}")
-    public List<RolePermission> findPermissionsByRole(@PathVariable String roleId){
+    public List<RolePermission> findPermissionsByRole(@PathVariable String roleId) {
         // Retorna la lista de permisos asociados a un rol específico
         return this.theRolePermissionRepository.getPermissionsByRole(roleId);
     }

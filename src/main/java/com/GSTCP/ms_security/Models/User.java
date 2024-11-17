@@ -1,9 +1,9 @@
 package com.GSTCP.ms_security.Models;
-import lombok.Data;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-
+import lombok.Data;
 
 @Data
 @Document
@@ -23,8 +23,7 @@ public class User {
         return verificationCode;
     }
 
-
-    //private List<Role> role;
+    // private List<Role> role;
 
     public User(String name, String email, String password) {
         this.name = name;
@@ -32,9 +31,8 @@ public class User {
         this.password = password;
     }
 
-    //constructor por defecto
-    public User(){
-
+    // constructor por defecto
+    public User() {
     }
 
     public String get_id() {
