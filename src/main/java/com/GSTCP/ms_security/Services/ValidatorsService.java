@@ -40,11 +40,12 @@ public class ValidatorsService {
         if(theUser!=null){//si el usuario no es nulo
             System.out.println("Antes URL "+url+" metodo "+method);
             url = url.replaceAll("[0-9a-fA-F]{24}|\\d+", "?");//esto me ayuda a generalizar las peticiones y lo remplazo por un interrogante
-            System.out.println("URL "+url+" metodo "+method);//estos sale de request osea la carta
+            System.out.println("URL "+url+" metodo "+method);//estos sale de request osea la carta, el metodo get post put, delete
 
-            Permission thePermission=this.thePermissionRepository.getPermission(url,method);
+            Permission thePermission=this.thePermissionRepository.getPermission(url,method);//obtenemos el permiso de la url y el metodo
             //a este repositorio le digo si me da permiso que si por favor me obtiene un permiso asi
             //Aqui obtengo o cargo los roles del Usuarios desde UserRoleRepository
+            //despues buscamos la intermedia
             List<UserRole> roles=this.theUserRoleRepository.getRolesByUser(theUser.get_id());
             //despues vamos a verificar si ese role tiene permiso osea verificar si existe la clase intermedia rolPermiso
             int i=0;

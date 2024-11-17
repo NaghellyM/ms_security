@@ -1,6 +1,7 @@
 package com.GSTCP.ms_security.Controllers;
 
 import com.GSTCP.ms_security.Models.NotificationRequest;
+import com.GSTCP.ms_security.Models.Permission;
 import com.GSTCP.ms_security.Models.Session;
 import com.GSTCP.ms_security.Models.User;
 import com.GSTCP.ms_security.Repositories.SessionRepository;
@@ -9,6 +10,8 @@ import com.GSTCP.ms_security.Repositories.UserRepository;
 import com.GSTCP.ms_security.Services.EncryptionService;
 import com.GSTCP.ms_security.Services.JwtService;
 import com.GSTCP.ms_security.Services.RequestService;
+import com.GSTCP.ms_security.Services.ValidatorsService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +41,9 @@ public class SecurityController {
     
     @Autowired
     private RequestService requestService;
+
+    @Autowired
+    private ValidatorsService theValidatorsService;
 
 
     //private String verificationCode; // Almacena el código de verificación
@@ -115,6 +121,20 @@ public HashMap<String, Object> verify2FA(@RequestBody HashMap<String, String> re
         return theResponse;
     }
 }
+//creamos un nuevo empoint donde se conecta con /api/public/security/permissions-validation en
+//ojo: es un metodo post porque si uno manda por get no se puede enviar un body entonces pailas importante para la vida laboral
+
+    //sustentacion cual es el usuario que mas a utulizado el sevicio de peliculas
+    //sustentacion que enpoint mas a usado el rol con el permiso de administracion
+@PostMapping("permissions-validation")
+//boolean puede entrar o no true o false
+    public boolean permissionsValidation(final HttpServletRequest request,
+                                         @RequestBody Permission thePermission) {
+    //venir y hacer el cruce busca el rol del usuario y verifica si tiene permiso(mando la request donde viene el token del usuario, mando la url y el metodo al que quiero acceder la cual es el que manda el cliente)
+        boolean success=this.theValidatorsService.validationRolePermission(request,thePermission.getUrl(),thePermission.getMethod());
+        return success;
+    }
+
 
 }
 
