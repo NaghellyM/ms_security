@@ -1,6 +1,6 @@
 package com.GSTCP.ms_security.Controllers;
 
-import com.GSTCP.ms_security.Models.NotificationRequest;
+// import com.GSTCP.ms_security.Models.NotificationRequest;
 import com.GSTCP.ms_security.Models.Permission;
 import com.GSTCP.ms_security.Models.Session;
 import com.GSTCP.ms_security.Models.User;
@@ -9,7 +9,7 @@ import com.GSTCP.ms_security.Repositories.UserRepository;
 
 import com.GSTCP.ms_security.Services.EncryptionService;
 import com.GSTCP.ms_security.Services.JwtService;
-import com.GSTCP.ms_security.Services.RequestService;
+// import com.GSTCP.ms_security.Services.RequestService;
 import com.GSTCP.ms_security.Services.ValidatorsService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -41,12 +41,12 @@ public class SecurityController {
     @Autowired
     private JwtService theJwtService;
 
-    @Autowired
-    private RequestService requestService;
+    // @Autowired
+    // private RequestService requestService;
 
     @Autowired
     private ValidatorsService theValidatorsService;
-    @PostMapping("/login")
+    @PostMapping("/login2")
     public HashMap<String,Object> login(@RequestBody User theNewUser,
                                         final HttpServletResponse response)throws IOException {
         HashMap<String,Object> theResponse=new HashMap<>();
@@ -254,7 +254,6 @@ public static boolean validateRecaptcha(String recaptchaToken) {
 }
 
     // creamos un nuevo empoint donde se conecta con
-    // /api/public/security/permissions-validation en
     // ojo: es un metodo post porque si uno manda por get no se puede enviar un body
     // entonces pailas importante para la vida laboral
 
