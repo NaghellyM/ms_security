@@ -14,6 +14,8 @@ public class User {
     private String email;
     private String password;
     private String verificationCode;
+        private String CaptchaToken;
+
 
     public void setVerificationCode(String verificationCode) {
         this.verificationCode = verificationCode;
@@ -21,6 +23,14 @@ public class User {
 
     public String getVerificationCode() {
         return verificationCode;
+    }
+    
+    public void setCaptchaToken(String CaptchaToken) {
+        this.CaptchaToken = CaptchaToken;
+    }
+
+    public String getCaptchaToken() {
+        return CaptchaToken;
     }
 
     // private List<Role> role;
