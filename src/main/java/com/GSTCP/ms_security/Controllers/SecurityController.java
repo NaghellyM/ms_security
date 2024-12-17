@@ -42,10 +42,28 @@ public class SecurityController {
 
     @Autowired
     private ValidatorsService theValidatorsService;
+    @PostMapping("/login")
+    public HashMap<String,Object> login(@RequestBody User theNewUser,
+                                        final HttpServletResponse response)throws IOException {
+        HashMap<String,Object> theResponse=new HashMap<>();
+        String token="";
+        User theActualUser=this.theUserRepository.getUserByEmail(theNewUser.getEmail());
+        if(theActualUser!=null &&
+                theActualUser.getPassword().equals(theEncryptionService.convertSHA256(theNewUser.getPassword()))){
+            token=theJwtService.generateToken(theActualUser);
+            theActualUser.setPassword("");
+            theResponse.put("token",token);
+            theResponse.put("user",theActualUser);
+            return theResponse;
+        }else{
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return  theResponse;
+        }
 
+    }
     // private String verificationCode; // Almacena el código de verificación
     // private Object thSessionRepository;
-    @PostMapping("/login")
+    /*@PostMapping("/login")
     public HashMap<String, Object> login(@RequestBody User theNewUser, final HttpServletResponse response)
             throws IOException {
         HashMap<String, Object> theResponse = new HashMap<>();
@@ -60,7 +78,7 @@ public class SecurityController {
         // Verificar si la contraseña coincide
         if (theActualUser != null
                 && theActualUser.getPassword()
-                        .equals(theEncryptionService.convertSHA256(theNewUser.getPassword()))) {
+                .equals(theEncryptionService.convertSHA256(theNewUser.getPassword()))) {
             // Generar y asignar el código de verificación
             String verificationCode = theEncryptionService.generateRandomCode(6);
             theActualUser.setVerificationCode(verificationCode);
@@ -80,7 +98,7 @@ public class SecurityController {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Contraseña incorrecta");
             return theResponse;
         }
-    }
+    }*/
 
     @PostMapping("/verify-2fa")
     public HashMap<String, Object> verify2FA(@RequestBody HashMap<String, String> requestBody,

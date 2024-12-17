@@ -54,6 +54,12 @@ public class UsersController {
         return theUser;
     }
 
+    @GetMapping("/email/{email}")
+    public User findByEmail(@PathVariable String email) {
+        User theUser = this.theUserRepository.getUserByEmail(email);
+        return theUser;
+    }
+
     @PostMapping
     public ResponseEntity<Object> create(@RequestBody User newUser) {
         // Revisa si el correo ya existe con una consulta directa
